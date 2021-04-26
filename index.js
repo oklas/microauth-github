@@ -20,7 +20,8 @@ const microAuthGithub = ({ clientId, clientSecret, callbackUrl, path = '/auth/gi
 
     if (pathname === path) {
       try {
-        const state = uuid.v4();
+        const stateDefault = (args||[])[0]?.state;
+        const state = stateDefault || uuid.v4();
         const redirectUrl = getRedirectUrl(state);
         states.push(state);
         return redirect(res, 302, redirectUrl);
@@ -74,11 +75,12 @@ const microAuthGithub = ({ clientId, clientSecret, callbackUrl, path = '/auth/gi
 
         const result = {
           provider,
+          state,
           accessToken,
           info: user
         };
 
-        args.push({ result });
+        args[0] = {result}
         return fn(req, res, ...args);
       } catch (err) {
         args.push({ err, provider });
