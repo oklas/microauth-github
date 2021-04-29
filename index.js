@@ -26,7 +26,7 @@ const microAuthGithub = ({ clientId, clientSecret, callbackUrl, path = '/auth/gi
         states.push(state);
         return redirect(res, 302, redirectUrl);
       } catch (err) {
-        args.push({ err, provider });
+        args[0] = { err, provider };
         return fn(req, res, ...args);
       }
     }
@@ -38,7 +38,7 @@ const microAuthGithub = ({ clientId, clientSecret, callbackUrl, path = '/auth/gi
 
         if (!states.includes(state)) {
           const err = new Error('Invalid state');
-          args.push({ err, provider });
+          args[0] = { err, provider };
           return fn(req, res, ...args);
         }
 
@@ -58,7 +58,7 @@ const microAuthGithub = ({ clientId, clientSecret, callbackUrl, path = '/auth/gi
         });
 
         if (response.error) {
-          args.push({ err: response.error, provider });
+          args[0] = { err: response.error, provider };
           return fn(req, res, ...args);
         }
 
@@ -83,7 +83,7 @@ const microAuthGithub = ({ clientId, clientSecret, callbackUrl, path = '/auth/gi
         args[0] = {result}
         return fn(req, res, ...args);
       } catch (err) {
-        args.push({ err, provider });
+        args[0] = { err, provider };
         return fn(req, res, ...args);
       }
     }
